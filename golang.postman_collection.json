@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "e0fed6a8-082b-4ca2-8e18-cdaafa02fee1",
+		"name": "golang",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "fillter_product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/productList/?gender=1&category=1&size=1&page=1&per_page=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"productList",
+						""
+					],
+					"query": [
+						{
+							"key": "gender",
+							"value": "1"
+						},
+						{
+							"key": "category",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per_page",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create_order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "product_id",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "product_id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "product_amount",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "product_amount",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "999 หมู่9 บ.ร่มเย็น ต.เป็นสุข อ.สุขสม จ.ดังใจ",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/createOrder/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"createOrder",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fillter_order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/orderList/?start=2022-04-22&end=2022-04-22&status=0&page=1&per_page=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orderList",
+						""
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2022-04-22"
+						},
+						{
+							"key": "end",
+							"value": "2022-04-22"
+						},
+						{
+							"key": "status",
+							"value": "0"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per_page",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

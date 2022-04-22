@@ -323,6 +323,8 @@ func main() {
 	router.HandleFunc("/productList/", productList)
 	router.HandleFunc("/createOrder/", createOrder)
 	router.HandleFunc("/orderList/", orderList)
+	
 	fmt.Println("server running on prot 8080 ...");
 	http.ListenAndServe(":8080", router)
+	
 }
