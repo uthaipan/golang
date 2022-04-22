@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "go-mon": "^0.0.5"
+  }
+}
