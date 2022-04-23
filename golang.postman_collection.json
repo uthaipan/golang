@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "fillter_product",
+			"name": "productList",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -48,7 +48,7 @@
 			"response": []
 		},
 		{
-			"name": "create_order",
+			"name": "createOrder",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -98,7 +98,7 @@
 			"response": []
 		},
 		{
-			"name": "fillter_order",
+			"name": "orderList",
 			"request": {
 				"method": "GET",
 				"header": [],
