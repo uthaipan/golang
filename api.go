@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 	"time"
 
@@ -85,17 +86,20 @@ func productList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	limit := ""
+	data_per_page := 10
 	if(page[0] != ""){
 		if(per_page[0] !=""){
 			page_index, _ := strconv.Atoi(page[0])
 			index_per_page, _ := strconv.Atoi(per_page[0])
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}else{
 			page_index, _ := strconv.Atoi(page[0])
 			index_per_page := 10
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}
 	}else{
 		if(per_page[0]!=""){
@@ -103,11 +107,13 @@ func productList(w http.ResponseWriter, r *http.Request) {
 			index_per_page, _ := strconv.Atoi(per_page[0])
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}else{
 			page_index := 1
 			index_per_page := 10
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}
 	}
 	
@@ -145,7 +151,7 @@ func productList(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer results_total.Close()
-	var count string
+	var count int
 	for results_total.Next() {   
 		if err := results_total.Scan(&count); err != nil {
 			log.Fatal(err)
@@ -154,7 +160,8 @@ func productList(w http.ResponseWriter, r *http.Request) {
 
 	var dataProductPage DataProductPage
 	dataProductPage.Page = page[0]
-	dataProductPage.Total_page = count
+	sum := math.Ceil(float64(count)/float64(data_per_page))
+	dataProductPage.Total_page = strconv.FormatFloat(sum, 'f',0, 64)
 	dataProductPage.Product = data
 
 	jsonResp, err := json.Marshal(dataProductPage)
@@ -237,17 +244,20 @@ func orderList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	limit := ""
+	data_per_page := 10
 	if(page[0] != ""){
 		if(per_page[0] !=""){
 			page_index, _ := strconv.Atoi(page[0])
 			index_per_page, _ := strconv.Atoi(per_page[0])
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}else{
 			page_index, _ := strconv.Atoi(page[0])
 			index_per_page := 10
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}
 	}else{
 		if(per_page[0]!=""){
@@ -255,11 +265,13 @@ func orderList(w http.ResponseWriter, r *http.Request) {
 			index_per_page, _ := strconv.Atoi(per_page[0])
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}else{
 			page_index := 1
 			index_per_page := 10
 			page := strconv.Itoa((page_index-1)*index_per_page)
 			limit += " LIMIT "+page+","+per_page[0]
+			data_per_page = index_per_page
 		}
 	}
 	
@@ -285,7 +297,7 @@ func orderList(w http.ResponseWriter, r *http.Request) {
 										LEFT JOIN size ON size.size_id = product.size_id
 										LEFT JOIN gender ON gender.gender_id = product.gender_id
 										LEFT JOIN category ON category.category_id = product.category_id
-										`+condition+" "+limit)
+										`+condition+` `+limit)
 	if err != nil {
 		panic(err)
 	}
@@ -299,7 +311,35 @@ func orderList(w http.ResponseWriter, r *http.Request) {
 		}
 		data_Order = append(data_Order, data)
 	}
-	jsonResp, err := json.Marshal(data_Order)
+	results_total, err := db.Query(`SELECT
+										COUNT(*)
+									FROM
+										order_buy
+									LEFT JOIN product_order_buy ON product_order_buy.order_buy_id = order_buy.order_buy_id
+									LEFT JOIN product ON product.product_id = product_order_buy.product_order_buy_id
+									LEFT JOIN size ON size.size_id = product.size_id
+									LEFT JOIN gender ON gender.gender_id = product.gender_id
+									LEFT JOIN category ON category.category_id = product.category_id
+									`+condition+` `+limit)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer results_total.Close()
+	var count int
+	for results_total.Next() {   
+		if err := results_total.Scan(&count); err != nil {
+			log.Fatal(err)
+		}
+	}
+	
+
+	var dataOderPage DataOderPage
+	dataOderPage.Page = page[0]
+	sum := math.Ceil(float64(count)/float64(data_per_page))
+	dataOderPage.Total_page = strconv.FormatFloat(sum, 'f',0, 64)
+	dataOderPage.Order_buy = data_Order
+
+	jsonResp, err := json.Marshal(dataOderPage)
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
